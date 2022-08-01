@@ -1,16 +1,10 @@
 <h1>FAQ</h1>
-<p>
-<strong>Q:</strong> Is there a free version?<br>
-<strong>A:</strong> Yes! We offer a free trail for 30 days on any paid plans.
-</p>
+<ul>
+    {{range .}}
+        {{template "qa" .}}
+    {{end}}
+</ul>
 
-<p>
-<strong>Q:</strong> What are you support hours?<br>
-<strong>A:</strong> We have support staff answering emails 24/7, tough response times may be
-a bit slower on weekends
-</p>
-
-<p>
-<strong>Q:</strong> How do I contact support?<br>
-<strong>A:</strong> Email us - support@lenslocked.com
-</p>
+{{define "qa"}}
+<li><b>{{.Question}}</b> {{.Answer}}</li>
+{{end}}
