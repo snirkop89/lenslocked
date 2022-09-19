@@ -1,38 +1,46 @@
 package main
 
 import (
-	"errors"
+	"database/sql"
 	"fmt"
+
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-type User struct {
-	Name string
-	Bio  string
-	Age  int
+type PostgresConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Database string
+	SSLMode  string
+}
+
+func (cfg PostgresConfig) String() string {
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database, cfg.SSLMode)
 }
 
 func main() {
-	err := CreateOrg()
-	fmt.Println(err)
-}
-
-func Connect() error {
-	return errors.New("connection failed")
-}
-
-func CreateUser() error {
-	err := Connect()
-	if err != nil {
-		return fmt.Errorf("create user: %w", err)
+	cfg := PostgresConfig{
+		Host:     "localhost",
+		Port:     "5432",
+		User:     "baloo",
+		Password: "junglebook",
+		Database: "lenslocked",
+		SSLMode:  "disable",
 	}
-	// ... continue on
-	return nil
-}
 
-func CreateOrg() error {
-	err := CreateUser()
+	db, err := sql.Open("pgx", cfg.String())
 	if err != nil {
-		return fmt.Errorf("create org: %w", err)
+		panic(err)
 	}
-	return nil
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("connected")
 }
