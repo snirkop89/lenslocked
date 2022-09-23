@@ -1,37 +1,15 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/snirkop89/lenslocked/models"
 )
 
-type PostgresConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Database string
-	SSLMode  string
-}
-
-func (cfg PostgresConfig) String() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database, cfg.SSLMode)
-}
-
 func main() {
-	cfg := PostgresConfig{
-		Host:     "localhost",
-		Port:     "5432",
-		User:     "baloo",
-		Password: "junglebook",
-		Database: "lenslocked",
-		SSLMode:  "disable",
-	}
-
-	db, err := sql.Open("pgx", cfg.String())
+	cfg := models.DefaultPostgresConfig()
+	db, err := models.Open(cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -64,18 +42,18 @@ func main() {
 	fmt.Println("tables created")
 
 	// Insert some data
-	name := "New User"
-	email := "new@smith.com"
-	row := db.QueryRow(`
-		INSERT INTO users(name, email)
-		VALUES ($1, $2) RETURNING id;
-	`, name, email)
+	// name := "New User"
+	// email := "new@smith.com"
+	// row := db.QueryRow(`
+	// 	INSERT INTO users(name, email)
+	// 	VALUES ($1, $2) RETURNING id;
+	// `, name, email)
 
-	var id int
-	err = row.Scan(&id)
-	if err != nil {
-		panic(err)
-	}
+	// var id int
+	// err = row.Scan(&id)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	// fmt.Println("User created. id =", id)
 
