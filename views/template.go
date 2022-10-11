@@ -16,7 +16,16 @@ func Must(t Template, err error) Template {
 }
 
 func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
-	tpl, err := template.ParseFS(fs, patterns...)
+	tpl := template.New(patterns[0])
+	tpl = tpl.Funcs(
+		template.FuncMap{
+			"csrfField": func() template.HTML {
+				return `<!-- TODO: Implement the csrfField -->`
+			},
+		},
+	)
+
+	tpl, err := tpl.ParseFS(fs, patterns...)
 	if err != nil {
 		return Template{}, fmt.Errorf("parsing template: %w", err)
 	}
@@ -26,22 +35,22 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	}, nil
 }
 
-func Parse(filepath string) (Template, error) {
-	tpl, err := template.ParseFiles(filepath)
-	if err != nil {
-		return Template{}, fmt.Errorf("parsing template: %w", err)
-	}
+// func Parse(filepath string) (Template, error) {
+// 	tpl, err := template.ParseFiles(filepath)
+// 	if err != nil {
+// 		return Template{}, fmt.Errorf("parsing template: %w", err)
+// 	}
 
-	return Template{
-		htmlTpl: tpl,
-	}, nil
-}
+// 	return Template{
+// 		htmlTpl: tpl,
+// 	}, nil
+// }
 
 type Template struct {
 	htmlTpl *template.Template
 }
 
-func (t Template) Execute(w http.ResponseWriter, data interface{}) {
+func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
 
 	err := t.htmlTpl.Execute(w, data)
