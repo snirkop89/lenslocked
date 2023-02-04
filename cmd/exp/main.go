@@ -1,11 +1,12 @@
 package main
 
 import (
-	"context"
+	stdctx "context"
 	"fmt"
-	"strings"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/snirkop89/lenslocked/context"
+	"github.com/snirkop89/lenslocked/models"
 )
 
 type ctxKey string
@@ -15,12 +16,12 @@ const (
 )
 
 func main() {
-	ctx := context.Background()
-	ctx = context.WithValue(ctx, favoriteColorKey, "blue")
+	ctx := stdctx.Background()
+	user := models.User{
+		Email: "john@example.com",
+	}
+	ctx = context.WithUser(ctx, &user)
 
-	value := ctx.Value(favoriteColorKey)
-	strValue := value.(string)
-
-	fmt.Println(value)
-	fmt.Println(strings.HasPrefix(strValue, "b"))
+	u := context.User(ctx)
+	fmt.Println(u)
 }
