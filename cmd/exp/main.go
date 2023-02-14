@@ -3,30 +3,39 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 
-	"github.com/go-mail/mail/v2"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/joho/godotenv"
+	"github.com/snirkop89/lenslocked/models"
 )
 
 func main() {
-	from := "test@lenslocked.com"
-	to := "snir@example.com"
-	subject := "This is a test email"
-	plaintext := "Body of the email"
-	html := `<h1>Hello there budyy!</h1><p>This is the amil</p>`
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	msg := mail.NewMessage()
-	msg.SetHeader("To", to)
-	msg.SetHeader("From", from)
-	msg.SetHeader("Subject", subject)
-	msg.SetBody("text/plain", plaintext)
-	msg.AddAlternative("text/html", html)
+	host := os.Getenv("SMTP_HOST")
+	portStr := os.Getenv("SMTP_PORT")
+	username := os.Getenv("SMTP_USERNAME")
+	password := os.Getenv("SMTP_PASSWORD")
 
-	msg.WriteTo(os.Stdout)
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	d := mail.NewDialer("sandbox.smtp.mailtrap.io", 25, "", "")
+	config := models.SMTPConfig{
+		Host:     host,
+		Port:     port,
+		Username: username,
+		Password: password,
+	}
 
-	if err := d.DialAndSend(msg); err != nil {
+	es := models.NewEmailService(config)
+	err = es.ForgotPassword("me@example.com", "https://thisdomain.com/token?abc123")
+	if err != nil {
 		log.Fatal(err)
 	}
 }
