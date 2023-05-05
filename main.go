@@ -108,6 +108,8 @@ func main() {
 		views.ParseFS(templates.FS, "signin.html.tmpl", "tailwind.html.tmpl"))
 	usersC.Templates.ForgotPassword = views.Must(
 		views.ParseFS(templates.FS, "forgot-pw.html.tmpl", "tailwind.html.tmpl"))
+	usersC.Templates.CheckYourEmail = views.Must(
+		views.ParseFS(templates.FS, "check-your-email.html.tmpl", "tailwind.html.tmpl"))
 
 	// Setup router and routes
 	r := chi.NewRouter()
@@ -115,10 +117,8 @@ func main() {
 	r.Use(umw.SetUser)
 	r.Get("/", controllers.StaticHandler(
 		views.Must(views.ParseFS(templates.FS, "home.html.tmpl", "tailwind.html.tmpl"))))
-
 	r.Get("/contact", controllers.StaticHandler(
 		views.Must(views.ParseFS(templates.FS, "contact.html.tmpl", "tailwind.html.tmpl"))))
-
 	r.Get("/faq", controllers.FAQ(
 		views.Must(views.ParseFS(templates.FS, "faq.html.tmpl", "tailwind.html.tmpl"))))
 	r.Get("/signup", usersC.New)
