@@ -31,6 +31,13 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 			"currentUser": func() (template.HTML, error) {
 				return "", fmt.Errorf("curreUser not impletmeted")
 			},
+			"errors": func() []string {
+				return []string{
+					"Don't go that!",
+					"The email address you provided is already associated with an account",
+					"Something went wrong",
+				}
+			},
 		},
 	)
 
