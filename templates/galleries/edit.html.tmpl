@@ -19,6 +19,16 @@
                 class="w-full py-2 px-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-lg">Update</button>
         </div>
     </form>
+    <div class="py-4">
+        <h2 class="pb-4 test-sm font-semibold text-gray-800">Current Images<h2>
+        <div class="py-2 grid grid-cols-8 gap-2">
+            {{range .Images}}
+            <div class="h-min w-full relative">
+                <img class="w-full" src="/galleries/{{.GalleryID}}/images/{{.FilenameEscaped}}">
+            </div>
+            {{end}}
+        </div>
+    </div>
     <!-- Danger Actions -->
     <div class="py-4">
         <h2>Dangerous Actions</h2>
