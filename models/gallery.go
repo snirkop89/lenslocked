@@ -108,6 +108,10 @@ func (service *GalleryService) Delete(id int) error {
 	if err != nil {
 		return fmt.Errorf("delete gallery: %w", err)
 	}
+	err = os.RemoveAll(service.galleryDir(id))
+	if err != nil {
+		return fmt.Errorf("delete gallery imagesS: %w", err)
+	}
 	return nil
 }
 
@@ -151,7 +155,7 @@ func (service *GalleryService) CreateImage(galleryID int, filename string, conte
 	if err != nil {
 		return fmt.Errorf("creating image %v: %w", filename, err)
 	}
-	err = checkExtension(filename, service.imageContentType())
+	err = checkExtension(filename, service.extensions())
 	if err != nil {
 		return fmt.Errorf("creating image %v: %w", filename, err)
 	}
