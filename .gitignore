@@ -3,3 +3,6 @@ tmp/
 images/
 # env variables
 .env
+
+# Node stuff
+node_modules/
