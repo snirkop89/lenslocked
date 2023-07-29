@@ -2,3 +2,6 @@
 .PHONY: connect
 connect:
 	@docker exec -it $$(docker ps -f name=lens-db -q) /usr/bin/psql -U baloo -d lenslocked
+
+compose-dev:
+	@docker compose up -d 
