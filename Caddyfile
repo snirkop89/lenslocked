@@ -1,0 +1,4 @@
+:80
+
+              # Docker container name
+reverse_proxy lenslocked:3000
