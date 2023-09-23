@@ -1,4 +1,4 @@
-:80
+lenslocked.ops-p.info
 
-              # Docker container name
+# Docker container name
 reverse_proxy lenslocked:3000
