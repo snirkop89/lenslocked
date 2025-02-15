@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+
 
 	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
@@ -32,6 +34,7 @@ func main() {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
 	url := conf.AuthCodeURL("state", oauth2.SetAuthURLParam("token_access_type", "offline"), oauth2.AccessTypeOffline)
+
 	fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
 	fmt.Printf("Once you have a code, past it and apress enter: ")
 
@@ -47,6 +50,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	err = enc.Encode(&tok)
@@ -68,4 +72,5 @@ func main() {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
+
 }
